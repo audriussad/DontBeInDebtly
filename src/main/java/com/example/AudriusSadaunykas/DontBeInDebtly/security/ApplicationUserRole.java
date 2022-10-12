@@ -7,7 +7,7 @@ import java.util.Set;
 import static com.example.AudriusSadaunykas.DontBeInDebtly.security.ApplicationUserPermission.*;
 
 public enum ApplicationUserRole {
-    USER(Sets.newHashSet()),
+    USER(Sets.newHashSet(BUDGET_ITEM_WRITE, BUDGET_ITEM_READ,  TRANSACTION_READ, TRANSACTION_WRITE)),
     ADMIN(Sets.newHashSet(BUDGET_ITEM_WRITE, BUDGET_ITEM_READ, TRANSACTION_READ, TRANSACTION_WRITE));
 
     private final Set<ApplicationUserPermission> permissions;
