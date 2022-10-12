@@ -4,7 +4,7 @@ public enum ApplicationUserPermission {
     BUDGET_ITEM_READ("budgetItem:read"),
     BUDGET_ITEM_WRITE("budgetItem:write"),
     TRANSACTION_READ("transaction:read"),
-    TRANSACTION_WRITE("transaction:write");
+    TRANSACTION_ITEM_ENTITY_WRITE("transactionItemEntity:write");
 
     private final String permission;
 
