@@ -25,6 +25,8 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+docker-compose.yml
+.docker
 
 ### NetBeans ###
 /nbproject/private/
