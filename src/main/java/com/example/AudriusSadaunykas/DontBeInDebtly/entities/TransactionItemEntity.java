@@ -18,7 +18,7 @@ public class TransactionItemEntity {
     private BigDecimal amount;
     @ManyToOne
     private Category category;
-    //Change to proper date class
+    //TODO: Change to proper date class
     private int year;
     private int month;
     private int day;

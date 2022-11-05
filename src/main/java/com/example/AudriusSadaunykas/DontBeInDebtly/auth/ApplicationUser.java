@@ -1,9 +1,6 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.auth;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,39 +8,37 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
-@Getter
-@Setter
-@EqualsAndHashCode
-@NoArgsConstructor
+@Data
 @Entity
+@Table(name = "users")
 public class ApplicationUser implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String password;
-    private String username;
+
+    @Column(name = "firstName")
+    private String firstName;
+    private String lastName;
+    @Column(name = "email")
     private String email;
+    private String password;
     @Enumerated(EnumType.STRING)
     private ApplicationUserRole applicationUserRole;
-    private Boolean locked;
-    private Boolean enabled;
+    private Boolean locked = false;
+    private Boolean enabled = false;
 
     public ApplicationUser(String password,
-                           String username,
+                           String firstName,
+                           String lastName,
                            String email,
-                           ApplicationUserRole applicationUserRole,
-                           Boolean locked,
-                           Boolean enabled) {
+                           ApplicationUserRole applicationUserRole) {
         this.password = password;
-        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.applicationUserRole = applicationUserRole;
-        this.locked = locked;
-        this.enabled = enabled;
     }
 
     @Override
@@ -57,9 +52,20 @@ public class ApplicationUser implements UserDetails {
         return password;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
     @Override
     public String getUsername() {
-        return username;
+        return email;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     @Override
