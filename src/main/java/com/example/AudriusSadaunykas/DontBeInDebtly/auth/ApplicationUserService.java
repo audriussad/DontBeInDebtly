@@ -1,8 +1,6 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.auth;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,6 +28,7 @@ public class ApplicationUserService implements UserDetailsService {
         if (userExists) {
             throw new IllegalStateException("email already taken");
         }
+
         String encodedPassword = passwordEncoder.encode(applicationUser.getPassword());
 
         applicationUser.setPassword(encodedPassword);
