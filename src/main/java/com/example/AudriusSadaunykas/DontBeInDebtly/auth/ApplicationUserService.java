@@ -34,8 +34,8 @@ public class ApplicationUserService implements UserDetailsService {
         applicationUser.setPassword(encodedPassword);
 
         applicationUserRepository.save(applicationUser);
-        //TODO: Send conformation token
-        return "it works";
+        //TODO: Send email conformation token
+        return applicationUser.getFirstName() + " registered";
     }
 
 }

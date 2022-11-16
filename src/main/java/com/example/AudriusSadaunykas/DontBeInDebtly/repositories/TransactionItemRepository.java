@@ -1,5 +1,6 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.repositories;
 
+import com.example.AudriusSadaunykas.DontBeInDebtly.auth.ApplicationUser;
 import com.example.AudriusSadaunykas.DontBeInDebtly.entities.BudgetItemEntity;
 import com.example.AudriusSadaunykas.DontBeInDebtly.entities.Category;
 import com.example.AudriusSadaunykas.DontBeInDebtly.entities.TransactionItemEntity;
@@ -13,4 +14,5 @@ import java.util.List;
 public interface TransactionItemRepository extends JpaRepository<TransactionItemEntity, Long> {
     List<TransactionItemEntity> findByYearAndMonth(Integer year, Integer month);
     List<TransactionItemEntity> findByYearAndMonthAndCategory(Integer year, Integer month, Category category);
+    List<TransactionItemEntity> findByUserId(Long id);
 }

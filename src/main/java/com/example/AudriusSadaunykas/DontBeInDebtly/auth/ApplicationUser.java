@@ -6,10 +6,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import static javax.persistence.FetchType.EAGER;
+
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class ApplicationUser implements UserDetails {
@@ -24,13 +28,14 @@ public class ApplicationUser implements UserDetails {
     @Enumerated(EnumType.STRING)
     private ApplicationUserRole applicationUserRole;
     private Boolean locked = false;
-    private Boolean enabled = false;
+    private Boolean enabled = true;
 
     public ApplicationUser(String password,
                            String firstName,
                            String lastName,
                            String email,
-                           ApplicationUserRole applicationUserRole) {
+                           ApplicationUserRole applicationUserRole)
+    {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -42,6 +47,10 @@ public class ApplicationUser implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(applicationUserRole.name());
         return Collections.singletonList(authority);
+    }
+
+    public ApplicationUserRole getRole() {
+        return applicationUserRole;
     }
 
     @Override

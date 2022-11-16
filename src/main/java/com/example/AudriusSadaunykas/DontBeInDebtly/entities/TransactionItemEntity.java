@@ -1,5 +1,6 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.entities;
 
+import com.example.AudriusSadaunykas.DontBeInDebtly.auth.ApplicationUser;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +23,9 @@ public class TransactionItemEntity {
     private int year;
     private int month;
     private int day;
+//    @ManyToOne
+//    private ApplicationUser user;
+    private Long userId;
 
 }
 
