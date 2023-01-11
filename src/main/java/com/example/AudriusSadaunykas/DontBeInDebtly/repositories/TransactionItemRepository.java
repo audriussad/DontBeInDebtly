@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface TransactionItemRepository extends JpaRepository<TransactionItemEntity, Long> {
-    List<TransactionItemEntity> findByYearAndMonth(Integer year, Integer month);
     List<TransactionItemEntity> findByYearAndMonthAndCategory(Integer year, Integer month, Category category);
     List<TransactionItemEntity> findByUserId(Long id);
+    List<TransactionItemEntity> findByYearAndMonthAndCategoryAndUserId(Integer year, Integer month, Category category, Long userIs);
 }

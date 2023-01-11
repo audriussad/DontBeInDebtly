@@ -3,7 +3,6 @@ package com.example.AudriusSadaunykas.DontBeInDebtly.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.AudriusSadaunykas.DontBeInDebtly.auth.ApplicationUser;
-import com.example.AudriusSadaunykas.DontBeInDebtly.auth.UserPrincipal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;

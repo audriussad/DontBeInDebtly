@@ -23,7 +23,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        // 150 muitinei. Get rekt
         http
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(STATELESS)

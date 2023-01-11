@@ -1,13 +1,8 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.entities;
 
-import com.example.AudriusSadaunykas.DontBeInDebtly.services.BudgetItemService;
-import com.example.AudriusSadaunykas.DontBeInDebtly.services.BudgetService;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
