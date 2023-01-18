@@ -1,5 +1,6 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.portfolio;
 
+import com.example.AudriusSadaunykas.DontBeInDebtly.entities.BudgetItemEntity;
 import com.example.AudriusSadaunykas.DontBeInDebtly.entities.Category;
 import com.example.AudriusSadaunykas.DontBeInDebtly.entities.TransactionItemEntity;
 import com.example.AudriusSadaunykas.DontBeInDebtly.repositories.BudgetItemRepository;
@@ -10,9 +11,11 @@ import org.springframework.stereotype.Component;
 
 import javax.sound.sampled.Port;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class CategoryMerger {
@@ -29,39 +32,27 @@ public class CategoryMerger {
     }
 
     public List<PortfolioItem> mergeCategoryDataToPortfolioItemList(int year, int month, Long userId) {
-        List<PortfolioItem> portfolioItemList = new ArrayList<>();
-        List<Category> listCategories = categoryRepository.findAll();
+            List<PortfolioItem> portfolioItemList = new ArrayList<>();
+            List<BudgetItemEntity> budgetItemEntities = budgetItemRepository.findByYearAndMonthAndUserId(year, month, userId);
 
-        for (Category category: listCategories) {
-            PortfolioItem portfolioItem = new PortfolioItem();
-            List<TransactionItemEntity> userTransactions = transactionItemRepository
-                    .findByYearAndMonthAndCategoryAndUserId(year, month, category, userId);
-            BigDecimal calculatedCategoryExpense = calculateCategoryExpense(userTransactions);
+            for (BudgetItemEntity budgetItem: budgetItemEntities) {
+                PortfolioItem portfolioItem = new PortfolioItem();
+                Category category = budgetItem.getCategory();
+                List<TransactionItemEntity> userTransactions = transactionItemRepository
+                        .findByYearAndMonthAndCategoryAndUserId(year, month, category, userId);
+                BigDecimal calculatedCategoryExpense = calculateCategoryExpense(userTransactions);
 
-            if (calculatedCategoryExpense.equals(BigDecimal.valueOf(0.00))) {
-                continue;
+                portfolioItem.setCategoryId(category.getId());
+                if (category.getParentCategory() != null) {
+                    portfolioItem.setParentCategoryId(category.getParentCategory().getId());
+                }
+
+                portfolioItem.setPlannedAmount(budgetItem.getPlannedAmount());
+                //portfolioItem.setPlannedAmount(budgetItemRepository.findByCategoryId(category.getId()).get().getPlannedAmount());
+                portfolioItem.setActualAmount(calculatedCategoryExpense);
+                portfolioItemList.add(portfolioItem);
             }
-            portfolioItem.setCategoryId(category.getId());
-            if (category.getParentCategory() != null) {
-                portfolioItem.setParentCategoryId(category.getParentCategory().getId());
-            }
-
-            portfolioItem.setPlannedAmount(budgetItemRepository.findByCategoryId(category.getId()).get().getPlannedAmount());
-            portfolioItem.setActualAmount(calculatedCategoryExpense);
-            portfolioItemList.add(portfolioItem);
-        }
-        return portfolioItemList;
-    }
-
-    public HashMap<Long, BigDecimal> getCategoriesAndExpenses(int year, int month, Long userId){
-        List<Category> listCategories = categoryRepository.findAll();
-        HashMap<Long, BigDecimal> categoriesAndExpenses = new HashMap<>();
-        for (Category category: listCategories) {
-            List<TransactionItemEntity> userTransactions = transactionItemRepository
-                    .findByYearAndMonthAndCategoryAndUserId(year, month, category, userId);
-            categoriesAndExpenses.put(category.getId(), calculateCategoryExpense(userTransactions));
-        }
-        return categoriesAndExpenses;
+            return portfolioItemList;
     }
 
     static BigDecimal calculateCategoryExpense(@NotNull List<TransactionItemEntity> userTransactions) {

@@ -6,10 +6,7 @@ import com.example.AudriusSadaunykas.DontBeInDebtly.entities.TransactionItemEnti
 import com.example.AudriusSadaunykas.DontBeInDebtly.repositories.BudgetItemRepository;
 import com.example.AudriusSadaunykas.DontBeInDebtly.repositories.CategoryRepository;
 import com.example.AudriusSadaunykas.DontBeInDebtly.repositories.TransactionItemRepository;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -17,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,26 +25,20 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class CategoryMergerTest {
 
 
-    @Autowired
-    TransactionItemRepository transactionItemRepository;
-    @Autowired
-    CategoryMerger categoryMerger;
+    @Mock
+    private TransactionItemRepository transactionItemRepository;
+    @Mock
+    private CategoryRepository categoryRepository;
+    @Mock
+    private BudgetItemRepository budgetItemRepository;
+    @InjectMocks
+    private CategoryMerger categoryMerger;
 
 
-    @Test
-    @Disabled
-    void mergeCategoryDataToPortfolioItemList() {
-
-    }
-
-
-    @Test
-    @Disabled
-    void getCategoriesAndExpenses() {
-    }
 
     @Test
     void doesItCalculateCategoryExpenseCorrectly() {
@@ -66,7 +58,6 @@ class CategoryMergerTest {
             entity3.setAmount(BigDecimal.valueOf(1.00));
 
         List<TransactionItemEntity> entityList = List.of(entity1, entity2, entity3);
-        // when
 
         // then
 
@@ -76,38 +67,56 @@ class CategoryMergerTest {
     }
 
     @Test
+    @DisplayName("Tests if CategoryMerger adds amounts correctly")
     public void testMergeCategoryDataToPortfolioItemList_validInput() {
-        int year = 2022;
-        int month = 2;
+        int year = 2023;
+        int month = 1;
         Long userId = 1L;
 
-        // mock the CategoryRepository and TransactionItemRepository objects
-        CategoryRepository mockCategoryRepository = mock(CategoryRepository.class);
-        TransactionItemRepository mockTransactionItemRepository = mock(TransactionItemRepository.class);
-        BudgetItemRepository mockBudgetItemRepository = mock(BudgetItemRepository.class);
+        // Fake budgetItem
+        BudgetItemEntity budgetItem = new BudgetItemEntity();
+        budgetItem.setPlannedAmount(BigDecimal.valueOf(100.00));
+        budgetItem.setDate(LocalDate.of(year,month,01));
+        budgetItem.setUserId(userId);
+        Category category = new Category();
+        category.setId(1L);
+        budgetItem.setCategory(category);
 
-        // set up the mock CategoryRepository to return a list of categories
-        List<Category> listCategories = new ArrayList<>();
-        listCategories.add(new Category(1L, "Category 1", null));
-        listCategories.add(new Category(2L, "Category 2", null));
-        when(mockCategoryRepository.findAll()).thenReturn(listCategories);
 
-        // set up the mock TransactionItemRepository to return a list of transactions for a given category and user
-        List<TransactionItemEntity> listTransactions = new ArrayList<>();
-        listTransactions.add(new TransactionItemEntity(1L, new BigDecimal("100.00"), listCategories.get(0), year, month, 1, userId));
-        listTransactions.add(new TransactionItemEntity(2L, new BigDecimal("50.00"), listCategories.get(0), year, month, 1, userId));
-        when(mockTransactionItemRepository.findByYearAndMonthAndCategoryAndUserId(year, month, listCategories.get(0), userId)).thenReturn(listTransactions);
+        // Set up for budgetItemRepository to return fake budgetItem
+        List<BudgetItemEntity> budgetItemEntities = new ArrayList<>();
+        budgetItemEntities.add(budgetItem);
+        when(budgetItemRepository.findByYearAndMonthAndUserId(year, month, userId)).thenReturn(budgetItemEntities);
 
-        // set up the mock BudgetItemRepository to return a budget item for a given category
-        when(mockTransactionItemRepository.findByYearAndMonthAndCategoryAndUserId(year, month, listCategories.get(0), userId)).thenReturn(listTransactions);
+        // Set up for transactionItemRepository to return fake transaction
+        List<TransactionItemEntity> transactionItemEntities = new ArrayList<>();
+        TransactionItemEntity transaction = new TransactionItemEntity();
+        transaction.setAmount(BigDecimal.valueOf(50.00));
+        transaction.setDate(LocalDate.of(year, month, 01));
+        transaction.setCategory(category);
+        transaction.setUserId(userId);
+        transactionItemEntities.add(transaction);
 
-        // create an instance of the CategoryMerger class and call the mergeCategoryDataToPortfolioItemList method
-        CategoryMerger categoryMerger = new CategoryMerger(mockCategoryRepository, mockBudgetItemRepository, mockTransactionItemRepository);
+        TransactionItemEntity transaction2 = new TransactionItemEntity();
+        transaction2.setAmount(BigDecimal.valueOf(20.00));
+        transaction2.setDate(LocalDate.of(year, month, 01));
+        transaction2.setCategory(category);
+        transaction2.setUserId(userId);
+        transactionItemEntities.add(transaction2);
+
+
+        when(transactionItemRepository.findByYearAndMonthAndCategoryAndUserId(year, month, category, userId))
+                .thenReturn(transactionItemEntities);
+
+
         List<PortfolioItem> portfolioItemList = categoryMerger.mergeCategoryDataToPortfolioItemList(year, month, userId);
 
-        // assert that the returned list of PortfolioItem objects is not null and has a size of 2
+
+
         assertNotNull(portfolioItemList);
-        assertEquals(2, portfolioItemList.size());
+        assertEquals(1, portfolioItemList.size());
+        assertEquals(BigDecimal.valueOf(100.00), portfolioItemList.get(0).getPlannedAmount());
+        assertEquals(BigDecimal.valueOf(70.00), portfolioItemList.get(0).getActualAmount());
     }
 
 }

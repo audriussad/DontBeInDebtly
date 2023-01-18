@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 
 @Data
@@ -19,11 +20,13 @@ public class TransactionItemEntity {
     private BigDecimal amount;
     @ManyToOne
     private Category category;
-    //TODO: Change to proper date class
-    private int year;
-    private int month;
-    private int day;
+    private LocalDate date;
+    private Instant createdAt;
     private Long userId;
+
+    public void setDate(LocalDate date) {
+        this.date = LocalDate.of(date.getYear(), date.getMonth(), date.getDayOfMonth());
+    }
 
 
 }

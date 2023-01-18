@@ -14,14 +14,9 @@ public class BudgetItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private int year;
-
-    private int month;
-
+    private LocalDate date;
+    private Long userId;
     private BigDecimal plannedAmount;
-
-
     @ManyToOne
     private Category category;
 

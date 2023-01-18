@@ -1,5 +1,6 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.services;
 
+import com.example.AudriusSadaunykas.DontBeInDebtly.auth.ApplicationUserRepository;
 import com.example.AudriusSadaunykas.DontBeInDebtly.entities.BudgetItemEntity;
 import com.example.AudriusSadaunykas.DontBeInDebtly.requests.CreateBudgetItemRequest;
 import com.example.AudriusSadaunykas.DontBeInDebtly.repositories.BudgetItemRepository;
@@ -14,35 +15,32 @@ import java.util.List;
 public class BudgetItemService {
     private final BudgetItemRepository budgetItemRepository;
     private final CategoryRepository categoryRepository;
+    private final ApplicationUserRepository applicationUserRepository;
 
     @Autowired
-    public BudgetItemService(BudgetItemRepository budgetItemRepository, CategoryRepository categoryRepository) {
+    public BudgetItemService(BudgetItemRepository budgetItemRepository, CategoryRepository categoryRepository, ApplicationUserRepository applicationUserRepository) {
         this.budgetItemRepository = budgetItemRepository;
         this.categoryRepository = categoryRepository;
+        this.applicationUserRepository = applicationUserRepository;
     }
 
     public List<BudgetItemEntity> getBudget() {
         return budgetItemRepository.findAll();
     }
 
-    public BudgetItemEntity saveBudgetItem(CreateBudgetItemRequest request) {
+    public BudgetItemEntity saveBudgetItem(CreateBudgetItemRequest request, Long userId) {
         var entity = new BudgetItemEntity();
-        entity.setYear(request.getYear());
-        entity.setMonth(request.getMonth());
         entity.setPlannedAmount(request.getPlannedAmount());
+        entity.setDate(request.getDate());
         var category = categoryRepository.findById(request.getCategoryId()).orElseThrow();
         entity.setCategory(category);
+        var user = applicationUserRepository.findById(userId).orElseThrow();
+        entity.setUserId(user.getId());
         return budgetItemRepository.save(entity);
     }
 
     public BudgetItemEntity editBudgetItem(CreateBudgetItemRequest request) {
         BudgetItemEntity entity = budgetItemRepository.findById(request.getId()).orElseThrow();
-        if (request.getYear() != 0) {
-            entity.setYear(request.getYear());
-        }
-        if (request.getMonth() != 0) {
-            entity.setMonth(request.getMonth());
-        }
         if (request.getPlannedAmount() != null) {
             entity.setPlannedAmount(request.getPlannedAmount());
         }

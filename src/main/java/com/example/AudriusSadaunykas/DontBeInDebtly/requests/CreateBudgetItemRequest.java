@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -14,11 +15,8 @@ public class CreateBudgetItemRequest {
 
     private Long id;
 
-    private int year;
-
-    private int month;
-
     private BigDecimal plannedAmount;
 
     private Long categoryId;
+    private LocalDate date;
 }

@@ -7,6 +7,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +23,6 @@ public class BudgetItemController {
     public BudgetItemController(BudgetItemService budgetItemService) {
         this.budgetItemService = budgetItemService;
     }
-    private ModelMapper modelMapper;
 
     @GetMapping("")
     public List<BudgetItemEntity> getBudget() {
@@ -39,8 +40,9 @@ public class BudgetItemController {
     }
 
     @PostMapping("/")
-    public BudgetItemEntity saveBudgetItem(@RequestBody CreateBudgetItemRequest request) {
-        return budgetItemService.saveBudgetItem(request);
+    public BudgetItemEntity saveBudgetItem(@RequestBody CreateBudgetItemRequest request,
+                                           @AuthenticationPrincipal Object user) {
+        return budgetItemService.saveBudgetItem(request, Long.valueOf(user.toString()));
     }
 
     @PutMapping("/")

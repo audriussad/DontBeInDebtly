@@ -17,6 +17,8 @@ import com.example.AudriusSadaunykas.DontBeInDebtly.repositories.TransactionItem
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -40,9 +42,8 @@ public class TransactionItemService {
     public TransactionItemEntity saveTransaction(CreateTransactionItemRequest request, Long userId) {
         var entity = new TransactionItemEntity();
         entity.setAmount(request.getAmount());
-        entity.setYear(request.getYear());
-        entity.setMonth(request.getMonth());
-        entity.setDay(request.getDay());
+        entity.setDate(request.getDate());
+        entity.setCreatedAt(Instant.now());
         var category = categoryRepository.findById(request.getCategoryId()).orElseThrow();
         entity.setCategory(category);
         var user = applicationUserRepository.findById(userId).orElseThrow();
@@ -55,15 +56,6 @@ public class TransactionItemService {
         if (isAuthorized(entity.getUserId(), userId)) {
 
 
-            if (request.getYear() != 0) {
-                entity.setYear(request.getYear());
-            }
-            if (request.getMonth() != 0) {
-                entity.setMonth(request.getMonth());
-            }
-            if (request.getDay() != 0) {
-                entity.setDay(request.getDay());
-            }
             if (request.getAmount() != null) {
                 entity.setAmount(request.getAmount());
             }
@@ -88,15 +80,6 @@ public class TransactionItemService {
 
     public void deleteTransaction(Long id) {
         transactionItemRepository.deleteById(id);
-    }
-
-    public BigDecimal sumOfMonthlyTransactions(Integer year, Integer month, Category category){
-        List<TransactionItemEntity> monthTransactions = transactionItemRepository.findByYearAndMonthAndCategory(year, month, category);
-        BigDecimal sumTransactions = BigDecimal.valueOf(0.00);
-        for (TransactionItemEntity transaction: monthTransactions) {
-                sumTransactions = sumTransactions.add(transaction.getAmount());
-        }
-        return sumTransactions;
     }
 
     public boolean isAuthorized(Long entityId, Long userId) {

@@ -1,5 +1,6 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.entities;
 
+import com.sun.xml.bind.v2.TODO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,4 +31,7 @@ public class Category {
         this.name = name;
         this.parentCategory = null;
     }
+
+    //TODO: Need category service for users to update categories
+    //TODO: Child categories does not add up to parent budgeted amount
 }
