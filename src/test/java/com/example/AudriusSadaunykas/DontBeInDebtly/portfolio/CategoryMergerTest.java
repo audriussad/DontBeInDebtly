@@ -78,8 +78,11 @@ class CategoryMergerTest {
         budgetItem.setPlannedAmount(BigDecimal.valueOf(100.00));
         budgetItem.setDate(LocalDate.of(year,month,01));
         budgetItem.setUserId(userId);
+        Category categoryParent = new Category();
+        categoryParent.setId(1L);
         Category category = new Category();
-        category.setId(1L);
+        category.setId(2L);
+        category.setParentCategory(categoryParent);
         budgetItem.setCategory(category);
 
 
@@ -114,7 +117,7 @@ class CategoryMergerTest {
 
 
         assertNotNull(portfolioItemList);
-        assertEquals(1, portfolioItemList.size());
+        assertEquals(2, portfolioItemList.size());
         assertEquals(BigDecimal.valueOf(100.00), portfolioItemList.get(0).getPlannedAmount());
         assertEquals(BigDecimal.valueOf(70.00), portfolioItemList.get(0).getActualAmount());
     }

@@ -9,13 +9,11 @@ import com.example.AudriusSadaunykas.DontBeInDebtly.repositories.TransactionItem
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
-import javax.sound.sampled.Port;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 @Component
 public class CategoryMerger {
@@ -34,23 +32,43 @@ public class CategoryMerger {
     public List<PortfolioItem> mergeCategoryDataToPortfolioItemList(int year, int month, Long userId) {
             List<PortfolioItem> portfolioItemList = new ArrayList<>();
             List<BudgetItemEntity> budgetItemEntities = budgetItemRepository.findByYearAndMonthAndUserId(year, month, userId);
+            Set<Category> parentCategories = new HashSet<>();
 
             for (BudgetItemEntity budgetItem: budgetItemEntities) {
-                PortfolioItem portfolioItem = new PortfolioItem();
                 Category category = budgetItem.getCategory();
                 List<TransactionItemEntity> userTransactions = transactionItemRepository
                         .findByYearAndMonthAndCategoryAndUserId(year, month, category, userId);
                 BigDecimal calculatedCategoryExpense = calculateCategoryExpense(userTransactions);
 
+                PortfolioItem portfolioItem = new PortfolioItem();
                 portfolioItem.setCategoryId(category.getId());
-                if (category.getParentCategory() != null) {
-                    portfolioItem.setParentCategoryId(category.getParentCategory().getId());
-                }
+                portfolioItem.setParentCategoryId(category.getParentCategory().getId());
+
+                parentCategories.add(category.getParentCategory());
 
                 portfolioItem.setPlannedAmount(budgetItem.getPlannedAmount());
-                //portfolioItem.setPlannedAmount(budgetItemRepository.findByCategoryId(category.getId()).get().getPlannedAmount());
                 portfolioItem.setActualAmount(calculatedCategoryExpense);
                 portfolioItemList.add(portfolioItem);
+            }
+
+            for (Category parent: parentCategories) {
+                PortfolioItem portfolioItem = new PortfolioItem();
+                portfolioItem.setCategoryId(parent.getId());
+
+                BigDecimal plannedAmount = BigDecimal.ZERO;
+                BigDecimal actualAmount = BigDecimal.ZERO;
+
+                for (PortfolioItem portfolioItem1: portfolioItemList) {
+                    if (parent.getId().equals(portfolioItem1.getParentCategoryId())) {
+                        plannedAmount = plannedAmount.add(portfolioItem1.getPlannedAmount());
+                        actualAmount = actualAmount.add(portfolioItem1.getActualAmount());
+
+                    }
+                }
+                portfolioItem.setPlannedAmount(plannedAmount);
+                portfolioItem.setActualAmount(actualAmount);
+                portfolioItemList.add(portfolioItem);
+
             }
             return portfolioItemList;
     }
@@ -61,5 +79,6 @@ public class CategoryMerger {
                 .reduce(BigDecimal.valueOf(0.00), BigDecimal::add);
         return sumOfExpenses;
     }
+
 
 }

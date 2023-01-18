@@ -28,11 +28,14 @@ public class BudgetItemService {
         return budgetItemRepository.findAll();
     }
 
-    public BudgetItemEntity saveBudgetItem(CreateBudgetItemRequest request, Long userId) {
+    public BudgetItemEntity saveBudgetItem(CreateBudgetItemRequest request, Long userId) throws Exception {
         var entity = new BudgetItemEntity();
         entity.setPlannedAmount(request.getPlannedAmount());
         entity.setDate(request.getDate());
         var category = categoryRepository.findById(request.getCategoryId()).orElseThrow();
+        if (category.getParentCategory() == null) {
+            throw new Exception("Cannot add budget to parent categories");
+        }
         entity.setCategory(category);
         var user = applicationUserRepository.findById(userId).orElseThrow();
         entity.setUserId(user.getId());

@@ -41,7 +41,7 @@ public class BudgetItemController {
 
     @PostMapping("/")
     public BudgetItemEntity saveBudgetItem(@RequestBody CreateBudgetItemRequest request,
-                                           @AuthenticationPrincipal Object user) {
+                                           @AuthenticationPrincipal Object user) throws Exception {
         return budgetItemService.saveBudgetItem(request, Long.valueOf(user.toString()));
     }
 
