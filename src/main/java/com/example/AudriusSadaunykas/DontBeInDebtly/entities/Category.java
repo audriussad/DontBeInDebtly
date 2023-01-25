@@ -32,6 +32,4 @@ public class Category {
         this.parentCategory = null;
     }
 
-    //TODO: Need category service for users to update categories
-    //TODO: Child categories does not add up to parent budgeted amount
 }

@@ -3,40 +3,19 @@ package com.example.AudriusSadaunykas.DontBeInDebtly.portfolio;
 import com.example.AudriusSadaunykas.DontBeInDebtly.entities.BudgetItemEntity;
 import com.example.AudriusSadaunykas.DontBeInDebtly.entities.Category;
 import com.example.AudriusSadaunykas.DontBeInDebtly.entities.TransactionItemEntity;
-import com.example.AudriusSadaunykas.DontBeInDebtly.repositories.BudgetItemRepository;
-import com.example.AudriusSadaunykas.DontBeInDebtly.repositories.CategoryRepository;
-import com.example.AudriusSadaunykas.DontBeInDebtly.repositories.TransactionItemRepository;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+
 class CategoryMergerTest {
 
-
-    @Mock
-    private TransactionItemRepository transactionItemRepository;
-    @Mock
-    private CategoryRepository categoryRepository;
-    @Mock
-    private BudgetItemRepository budgetItemRepository;
-    @InjectMocks
-    private CategoryMerger categoryMerger;
+    private CategoryMerger categoryMerger = new CategoryMerger();
 
 
 
@@ -46,7 +25,7 @@ class CategoryMergerTest {
         int year = 2022;
         int month = 12;
         Long userId = 1L;
-        Category category = new Category(1L, "testCat", null);
+        Category category = new Category(69L, "testCat", null);
 
         TransactionItemEntity entity1 = new TransactionItemEntity();
             entity1.setAmount(BigDecimal.valueOf(10.31));
@@ -73,7 +52,8 @@ class CategoryMergerTest {
         int month = 1;
         Long userId = 1L;
 
-        // Fake budgetItem
+        // Fake budgetItem and categories
+        List<BudgetItemEntity> budgetItemEntities = new ArrayList<>();
         BudgetItemEntity budgetItem = new BudgetItemEntity();
         budgetItem.setPlannedAmount(BigDecimal.valueOf(100.00));
         budgetItem.setDate(LocalDate.of(year,month,01));
@@ -84,14 +64,9 @@ class CategoryMergerTest {
         category.setId(2L);
         category.setParentCategory(categoryParent);
         budgetItem.setCategory(category);
-
-
-        // Set up for budgetItemRepository to return fake budgetItem
-        List<BudgetItemEntity> budgetItemEntities = new ArrayList<>();
         budgetItemEntities.add(budgetItem);
-        when(budgetItemRepository.findByYearAndMonthAndUserId(year, month, userId)).thenReturn(budgetItemEntities);
 
-        // Set up for transactionItemRepository to return fake transaction
+        // Set up fake transactions
         List<TransactionItemEntity> transactionItemEntities = new ArrayList<>();
         TransactionItemEntity transaction = new TransactionItemEntity();
         transaction.setAmount(BigDecimal.valueOf(50.00));
@@ -107,19 +82,14 @@ class CategoryMergerTest {
         transaction2.setUserId(userId);
         transactionItemEntities.add(transaction2);
 
-
-        when(transactionItemRepository.findByYearAndMonthAndCategoryAndUserId(year, month, category, userId))
-                .thenReturn(transactionItemEntities);
-
-
-        List<PortfolioItem> portfolioItemList = categoryMerger.mergeCategoryDataToPortfolioItemList(year, month, userId);
-
-
+        List<PortfolioItem> portfolioItemList = categoryMerger.mergeCategoryDataToPortfolioItemList(
+                budgetItemEntities, transactionItemEntities);
 
         assertNotNull(portfolioItemList);
         assertEquals(2, portfolioItemList.size());
         assertEquals(BigDecimal.valueOf(100.00), portfolioItemList.get(0).getPlannedAmount());
         assertEquals(BigDecimal.valueOf(70.00), portfolioItemList.get(0).getActualAmount());
+        assertEquals(null,portfolioItemList.get(1).getParentCategoryId());
     }
 
 }
