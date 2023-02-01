@@ -1,20 +1,14 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.services;
 
-import com.example.AudriusSadaunykas.DontBeInDebtly.auth.ApplicationUser;
 import com.example.AudriusSadaunykas.DontBeInDebtly.auth.ApplicationUserRepository;
-import com.example.AudriusSadaunykas.DontBeInDebtly.entities.Category;
 import com.example.AudriusSadaunykas.DontBeInDebtly.entities.TransactionItemEntity;
 import com.example.AudriusSadaunykas.DontBeInDebtly.repositories.CategoryRepository;
 import com.example.AudriusSadaunykas.DontBeInDebtly.requests.CreateTransactionItemRequest;
-import org.apache.catalina.connector.Request;
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 import org.springframework.stereotype.Service;
 import com.example.AudriusSadaunykas.DontBeInDebtly.repositories.TransactionItemRepository;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.math.BigDecimal;
 import java.time.Instant;

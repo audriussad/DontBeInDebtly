@@ -14,7 +14,7 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public Category saveNewCategory(CreateCategoryRequest request, Long userId) {
+    public Category saveNewCategory(CreateCategoryRequest request, long userId) {
         var catNew = new Category();
         catNew.setName(request.getName());
         if (request.getParentId() != null) {
@@ -23,4 +23,6 @@ public class CategoryService {
         }
         return categoryRepository.save(catNew);
     }
+
+    //TODO: categories have to be user specific
 }

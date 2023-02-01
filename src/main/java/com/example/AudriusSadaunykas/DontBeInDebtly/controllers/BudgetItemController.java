@@ -1,5 +1,6 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.controllers;
 
+import com.example.AudriusSadaunykas.DontBeInDebtly.auth.UserPrincipal;
 import com.example.AudriusSadaunykas.DontBeInDebtly.entities.BudgetItemEntity;
 import com.example.AudriusSadaunykas.DontBeInDebtly.requests.CreateBudgetItemRequest;
 import com.example.AudriusSadaunykas.DontBeInDebtly.services.BudgetItemService;
@@ -41,8 +42,8 @@ public class BudgetItemController {
 
     @PostMapping("/")
     public BudgetItemEntity saveBudgetItem(@RequestBody CreateBudgetItemRequest request,
-                                           @AuthenticationPrincipal Object user) throws Exception {
-        return budgetItemService.saveBudgetItem(request, Long.valueOf(user.toString()));
+                                           @AuthenticationPrincipal UserPrincipal user) throws Exception {
+        return budgetItemService.saveBudgetItem(request, user.getUserId());
     }
 
     @PutMapping("/")

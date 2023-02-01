@@ -1,22 +1,23 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.controllers;
 
-import com.example.AudriusSadaunykas.DontBeInDebtly.entities.TransactionItemEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.AudriusSadaunykas.DontBeInDebtly.auth.LoginResponse;
+import com.example.AudriusSadaunykas.DontBeInDebtly.auth.LoginService;
+import com.example.AudriusSadaunykas.DontBeInDebtly.requests.LoginRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/login")
+@RequiredArgsConstructor
 public class LoginController {
 
-    @GetMapping("")
-    public String login()
-    {
-        return "login";
-    }
+  private final LoginService loginService;
+
+
+  @PostMapping
+    public LoginResponse login(@RequestBody @Validated LoginRequest request) throws Exception{
+      return loginService.attemptLogin(request.getEmail(), request.getPassword());
+  }
 }

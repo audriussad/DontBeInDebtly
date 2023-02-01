@@ -1,63 +1,77 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.auth;
 
-import org.springframework.security.authentication.AbstractAuthenticationToken;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.util.Assert;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Collection;
+import java.util.Objects;
 
-public class UserPrincipal extends AbstractAuthenticationToken {
+@Builder
+@RequiredArgsConstructor
+public class UserPrincipal implements UserDetails {
+    private final Long userId;
+    private final String email;
+    private final String name;
+    @JsonIgnore
+    private final String password;
+//    private final String authMethod;
+    private final Collection<? extends GrantedAuthority> authorities;
 
-    private final String id;
-    private Object credentials;
 
-    public UserPrincipal(String id, Object credentials, Collection<? extends GrantedAuthority> authorities) {
-        super(authorities);
-        this.id = id;
-        this.credentials = credentials;
-        super.setAuthenticated(true);
-    }
 
-    public UserPrincipal(String id, Object credentials) {
-        super(null);
-        this.id = id;
-        this.credentials = credentials;
-        setAuthenticated(false);
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 
     @Override
-    public Object getCredentials() {
-        return credentials;
+    public String getPassword() {
+        return this.password;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 
     @Override
-    public Object getPrincipal() {
-        return id;
-    }
-
-    public String getId() {
-        return id;
+    public String getUsername() {
+        return String.valueOf(userId);
     }
 
     @Override
-    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-        Assert.isTrue(!isAuthenticated,
-                "Cannot set this token to trusted - use constructor which takes a GrantedAuthority list instead");
-        super.setAuthenticated(false);
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
     @Override
-    public void eraseCredentials() {
-        super.eraseCredentials();
-        this.credentials = null;
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public static UserPrincipal authenticated(String id, Object credentials,
-                                                                    Collection<? extends GrantedAuthority> authorities) {
-        return new UserPrincipal(id, credentials, authorities);
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public static UserPrincipal unauthenticated(String id, Object credentials) {
-        return new UserPrincipal(id, credentials);
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        UserPrincipal that = (UserPrincipal) obj;
+        return Objects.equals(userId, that.userId);
+    }
 }

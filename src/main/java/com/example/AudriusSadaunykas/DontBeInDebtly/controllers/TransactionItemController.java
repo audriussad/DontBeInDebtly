@@ -1,5 +1,6 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.controllers;
 
+import com.example.AudriusSadaunykas.DontBeInDebtly.auth.UserPrincipal;
 import com.example.AudriusSadaunykas.DontBeInDebtly.entities.TransactionItemEntity;
 import com.example.AudriusSadaunykas.DontBeInDebtly.requests.CreateTransactionItemRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,10 @@ public class TransactionItemController {
 
     @GetMapping("/{id}")
     public ResponseEntity<TransactionItemEntity> get(@PathVariable Long id,
-                                                     @AuthenticationPrincipal Object user) {
+                                                     @AuthenticationPrincipal UserPrincipal user) {
         try {
             TransactionItemEntity transactionItem = transactionItemService.getTransaction(id,
-                    Long.valueOf(user.toString()));
+                    user.getUserId());
             return new ResponseEntity<TransactionItemEntity>(transactionItem, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<TransactionItemEntity>(HttpStatus.NOT_FOUND);
@@ -48,23 +49,23 @@ public class TransactionItemController {
     @PostMapping("/")
     public TransactionItemEntity addNewTransaction(@RequestBody CreateTransactionItemRequest request,
                                                   // @CurrentSecurityContext(expression = "authentication.name") String username
-                                                    @AuthenticationPrincipal Object user) {
-        return transactionItemService.saveTransaction(request, Long.valueOf(user.toString()));
+                                                    @AuthenticationPrincipal UserPrincipal user) {
+        return transactionItemService.saveTransaction(request, user.getUserId());
     }
 
     @PutMapping("/")
     @PreAuthorize("hasAuthority('transaction:write')")
     public ResponseEntity<String> update(@RequestBody CreateTransactionItemRequest request,
-                                         @AuthenticationPrincipal Object user) {
-        return transactionItemService.editTransaction(request, Long.valueOf(user.toString()));
+                                         @AuthenticationPrincipal UserPrincipal user) {
+        return transactionItemService.editTransaction(request, user.getUserId());
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('transaction:write')")
     public ResponseEntity<TransactionItemEntity> delete(@PathVariable Long id,
-                                                        @AuthenticationPrincipal Object user) {
+                                                        @AuthenticationPrincipal UserPrincipal user) {
         try {
-            TransactionItemEntity transactionItem = transactionItemService.getTransaction(id, Long.valueOf(user.toString()));
+            TransactionItemEntity transactionItem = transactionItemService.getTransaction(id, user.getUserId());
             transactionItemService.deleteTransaction(id);
             return new ResponseEntity<TransactionItemEntity>(transactionItem, HttpStatus.OK);
         } catch (NoSuchElementException e) {

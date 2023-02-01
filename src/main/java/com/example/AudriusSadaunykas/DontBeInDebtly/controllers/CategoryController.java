@@ -1,5 +1,6 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.controllers;
 
+import com.example.AudriusSadaunykas.DontBeInDebtly.auth.UserPrincipal;
 import com.example.AudriusSadaunykas.DontBeInDebtly.entities.Category;
 import com.example.AudriusSadaunykas.DontBeInDebtly.requests.CreateCategoryRequest;
 import com.example.AudriusSadaunykas.DontBeInDebtly.services.CategoryService;
@@ -23,7 +24,7 @@ public class CategoryController {
 
     @PostMapping("/")
     public Category addNewCategory(@RequestBody CreateCategoryRequest request,
-                                      @AuthenticationPrincipal Object user) throws Exception {
-        return categoryService.saveNewCategory(request, Long.valueOf(user.toString()));
+                                      @AuthenticationPrincipal UserPrincipal user) throws Exception {
+        return categoryService.saveNewCategory(request, user.getUserId());
     }
 }

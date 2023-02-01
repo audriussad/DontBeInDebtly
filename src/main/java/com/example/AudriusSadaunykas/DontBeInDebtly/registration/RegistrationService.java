@@ -2,7 +2,6 @@ package com.example.AudriusSadaunykas.DontBeInDebtly.registration;
 
 import com.example.AudriusSadaunykas.DontBeInDebtly.auth.ApplicationUser;
 import com.example.AudriusSadaunykas.DontBeInDebtly.auth.ApplicationUserRole;
-import com.example.AudriusSadaunykas.DontBeInDebtly.auth.ApplicationUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class RegistrationService {
 
-    private final ApplicationUserService applicationUserService;
+    private final SignUpService applicationUserService;
     private final EmailValidator emailValidator;
     public String register(RegistrationRequest request) {
         boolean isValidEmail = emailValidator.test(request.getEmail());

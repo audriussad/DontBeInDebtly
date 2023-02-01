@@ -16,7 +16,7 @@ import static javax.persistence.FetchType.EAGER;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class ApplicationUser implements UserDetails {
+public class ApplicationUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,17 +43,16 @@ public class ApplicationUser implements UserDetails {
         this.applicationUserRole = applicationUserRole;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(applicationUserRole.name());
-        return Collections.singletonList(authority);
-    }
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(applicationUserRole.name());
+//        return Collections.singletonList(authority);
+//    }
 
     public ApplicationUserRole getRole() {
         return applicationUserRole;
     }
 
-    @Override
     public String getPassword() {
         return password;
     }
@@ -65,7 +64,6 @@ public class ApplicationUser implements UserDetails {
     public String getLastName() {
         return lastName;
     }
-    @Override
     public String getUsername() {
         return email;
     }
@@ -74,23 +72,5 @@ public class ApplicationUser implements UserDetails {
         return email;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return !locked;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
 }

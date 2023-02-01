@@ -1,5 +1,6 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.portfolio;
 
+import com.example.AudriusSadaunykas.DontBeInDebtly.auth.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ public class PortfolioController {
 
     @GetMapping("/{year}:{month}")
     public List<PortfolioItem> getUserPortfolio(@PathVariable int year, @PathVariable int month,
-                                                @AuthenticationPrincipal Object user) {
-        return portfolioService.showPortfolio(Long.valueOf(user.toString()), year, month);
+                                                @AuthenticationPrincipal UserPrincipal user) {
+        return portfolioService.showPortfolio(user.getUserId(), year, month);
     }
 }
