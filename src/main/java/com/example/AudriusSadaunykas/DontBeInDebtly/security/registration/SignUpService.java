@@ -1,7 +1,7 @@
-package com.example.AudriusSadaunykas.DontBeInDebtly.registration;
+package com.example.AudriusSadaunykas.DontBeInDebtly.security.registration;
 
-import com.example.AudriusSadaunykas.DontBeInDebtly.auth.ApplicationUser;
-import com.example.AudriusSadaunykas.DontBeInDebtly.auth.ApplicationUserRepository;
+import com.example.AudriusSadaunykas.DontBeInDebtly.security.Users.ApplicationUser;
+import com.example.AudriusSadaunykas.DontBeInDebtly.security.Users.ApplicationUserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

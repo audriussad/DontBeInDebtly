@@ -1,6 +1,7 @@
 package e2e;
 
-import com.example.AudriusSadaunykas.DontBeInDebtly.auth.*;
+import com.example.AudriusSadaunykas.DontBeInDebtly.security.UserPrincipal;
+import com.example.AudriusSadaunykas.DontBeInDebtly.security.UserPrincipalAuthentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -8,8 +9,6 @@ import org.springframework.security.test.context.support.WithSecurityContextFact
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
-
-import static com.example.AudriusSadaunykas.DontBeInDebtly.auth.ApplicationUserRole.USER;
 
 /**
  * Builds a custom {@link SecurityContext} with a fake user for endpoint tests
@@ -30,16 +29,6 @@ public class WithMockUserSecurityContextFactory implements WithSecurityContextFa
 //                .authMethod("BIOMETRIC")
                 .authorities( authorities )
                 .build();
-
-        var user = new ApplicationUser();
-        user.setId(annotation.userId());
-        user.setEmail("loxas@momakas.cum");
-        user.setFirstName("Gustas");
-        user.setLastName("Liaugminas");
-        user.setPassword("asdhashddf");
-        user.setApplicationUserRole(USER);
-
-//        var auth = new UserPrincipalOld(user.getId().toString(), null, authorities);
 
         var auth = new UserPrincipalAuthentication(principal);
         context.setAuthentication(auth);

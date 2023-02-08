@@ -7,7 +7,6 @@ services:
             - .docker/data/db:/var/lib/mysql:cached
         command: --default-authentication-plugin=mysql_native_password --log-bin-trust-function-creators=on
         restart: always
-        platform: linux/x86_64
         environment:
             MYSQL_ROOT_PASSWORD: example
             MYSQL_DATABASE: budgetStuff

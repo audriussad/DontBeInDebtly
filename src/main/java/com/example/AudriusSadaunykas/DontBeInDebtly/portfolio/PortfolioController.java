@@ -1,6 +1,7 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.portfolio;
 
-import com.example.AudriusSadaunykas.DontBeInDebtly.auth.UserPrincipal;
+import com.example.AudriusSadaunykas.DontBeInDebtly.security.UserPrincipal;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,14 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/portfolio")
+@RequiredArgsConstructor
 public class PortfolioController {
 
     private final PortfolioService portfolioService;
-
-    @Autowired
-    public PortfolioController(PortfolioService portfolioService) {
-        this.portfolioService = portfolioService;
-    }
 
     @GetMapping("/{year}:{month}")
     public List<PortfolioItem> getUserPortfolio(@PathVariable int year, @PathVariable int month,

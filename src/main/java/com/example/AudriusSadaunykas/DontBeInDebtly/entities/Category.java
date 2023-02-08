@@ -18,6 +18,7 @@ public class Category {
     private String name;
     @ManyToOne
     private Category parentCategory;
+    private Long userId;
 
 
     public Category(Long id, String name, Category parentCategory) {

@@ -1,6 +1,5 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.entities;
 
-import com.example.AudriusSadaunykas.DontBeInDebtly.auth.ApplicationUser;
 import lombok.*;
 
 import javax.persistence.*;

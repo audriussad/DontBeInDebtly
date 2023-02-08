@@ -1,4 +1,4 @@
-package com.example.AudriusSadaunykas.DontBeInDebtly.auth;
+package com.example.AudriusSadaunykas.DontBeInDebtly.security.Users;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

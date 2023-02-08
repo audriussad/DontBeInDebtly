@@ -1,4 +1,4 @@
-package com.example.AudriusSadaunykas.DontBeInDebtly.requests;
+package com.example.AudriusSadaunykas.DontBeInDebtly.security.login;
 
 import lombok.Data;
 

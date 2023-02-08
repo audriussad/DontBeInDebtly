@@ -1,7 +1,7 @@
-package com.example.AudriusSadaunykas.DontBeInDebtly.registration;
+package com.example.AudriusSadaunykas.DontBeInDebtly.security.registration;
 
-import com.example.AudriusSadaunykas.DontBeInDebtly.auth.ApplicationUser;
-import com.example.AudriusSadaunykas.DontBeInDebtly.auth.ApplicationUserRole;
+import com.example.AudriusSadaunykas.DontBeInDebtly.security.Users.ApplicationUser;
+import com.example.AudriusSadaunykas.DontBeInDebtly.security.Users.ApplicationUserRole;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

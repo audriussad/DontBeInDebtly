@@ -5,6 +5,8 @@ import com.example.AudriusSadaunykas.DontBeInDebtly.repositories.CategoryReposit
 import com.example.AudriusSadaunykas.DontBeInDebtly.requests.CreateCategoryRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CategoryService {
 
@@ -17,12 +19,30 @@ public class CategoryService {
     public Category saveNewCategory(CreateCategoryRequest request, long userId) {
         var catNew = new Category();
         catNew.setName(request.getName());
+        catNew.setUserId(userId);
         if (request.getParentId() != null) {
             Category parentCategory = categoryRepository.findById(request.getParentId()).orElseThrow();
             catNew.setParentCategory(parentCategory);
+
         }
         return categoryRepository.save(catNew);
     }
 
-    //TODO: categories have to be user specific
+    public List<Category> showUsersCategories(Long userId) {
+        return categoryRepository.findByUserId(userId);
+    }
+
+    public void deleteCategory(Long categoryId, Long userId) {
+        if (isAuthenticated(categoryId, userId)) {
+            categoryRepository.deleteById(categoryId);
+        }
+    }
+
+    private boolean isAuthenticated(Long entityId, Long userId) {
+        var entity = categoryRepository.findById(entityId).orElseThrow();
+        if (entity.getUserId() == userId) {
+            return true;
+        }
+        return false;
+    }
 }

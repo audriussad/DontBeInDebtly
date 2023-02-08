@@ -1,9 +1,6 @@
-package com.example.AudriusSadaunykas.DontBeInDebtly.auth;
+package com.example.AudriusSadaunykas.DontBeInDebtly.security;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-
-import java.util.Collection;
 
 public class UserPrincipalAuthentication extends AbstractAuthenticationToken {
     private UserPrincipal userPrincipal;

@@ -1,7 +1,5 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.security;
 
-import com.example.AudriusSadaunykas.DontBeInDebtly.auth.UserPrincipal;
-import com.example.AudriusSadaunykas.DontBeInDebtly.auth.UserPrincipalAuthentication;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

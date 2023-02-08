@@ -1,4 +1,4 @@
-package com.example.AudriusSadaunykas.DontBeInDebtly.registration;
+package com.example.AudriusSadaunykas.DontBeInDebtly.security.registration;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

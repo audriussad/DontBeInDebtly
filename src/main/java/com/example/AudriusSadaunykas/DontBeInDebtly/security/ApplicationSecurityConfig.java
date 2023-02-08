@@ -1,6 +1,5 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.security;
 
-import com.example.AudriusSadaunykas.DontBeInDebtly.auth.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

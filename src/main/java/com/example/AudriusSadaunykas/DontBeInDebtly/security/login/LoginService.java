@@ -1,7 +1,8 @@
-package com.example.AudriusSadaunykas.DontBeInDebtly.auth;
+package com.example.AudriusSadaunykas.DontBeInDebtly.security.login;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.example.AudriusSadaunykas.DontBeInDebtly.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

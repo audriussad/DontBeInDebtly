@@ -89,7 +89,7 @@ class CategoryMergerTest {
         assertEquals(2, portfolioItemList.size());
         assertEquals(BigDecimal.valueOf(100.00), portfolioItemList.get(0).getPlannedAmount());
         assertEquals(BigDecimal.valueOf(70.00), portfolioItemList.get(0).getActualAmount());
-        assertEquals(null,portfolioItemList.get(1).getParentCategoryId());
+        assertEquals(null,portfolioItemList.get(0).getParentCategoryId());
     }
 
 }

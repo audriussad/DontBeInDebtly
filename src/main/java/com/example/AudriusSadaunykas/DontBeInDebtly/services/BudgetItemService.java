@@ -1,31 +1,26 @@
 package com.example.AudriusSadaunykas.DontBeInDebtly.services;
 
-import com.example.AudriusSadaunykas.DontBeInDebtly.auth.ApplicationUserRepository;
+import com.example.AudriusSadaunykas.DontBeInDebtly.security.Users.ApplicationUserRepository;
 import com.example.AudriusSadaunykas.DontBeInDebtly.entities.BudgetItemEntity;
 import com.example.AudriusSadaunykas.DontBeInDebtly.requests.CreateBudgetItemRequest;
 import com.example.AudriusSadaunykas.DontBeInDebtly.repositories.BudgetItemRepository;
 import com.example.AudriusSadaunykas.DontBeInDebtly.repositories.CategoryRepository;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class BudgetItemService {
     private final BudgetItemRepository budgetItemRepository;
     private final CategoryRepository categoryRepository;
-    private final ApplicationUserRepository applicationUserRepository;
 
-    @Autowired
-    public BudgetItemService(BudgetItemRepository budgetItemRepository, CategoryRepository categoryRepository, ApplicationUserRepository applicationUserRepository) {
-        this.budgetItemRepository = budgetItemRepository;
-        this.categoryRepository = categoryRepository;
-        this.applicationUserRepository = applicationUserRepository;
-    }
 
-    public List<BudgetItemEntity> getBudget() {
-        return budgetItemRepository.findAll();
+    public List<BudgetItemEntity> getBudget(Long userId) {
+        return budgetItemRepository.findByUserId(userId);
     }
 
     public BudgetItemEntity saveBudgetItem(CreateBudgetItemRequest request, Long userId) throws Exception {
@@ -37,8 +32,7 @@ public class BudgetItemService {
             throw new Exception("Cannot add budget to parent categories");
         }
         entity.setCategory(category);
-        var user = applicationUserRepository.findById(userId).orElseThrow();
-        entity.setUserId(user.getId());
+        entity.setUserId(userId);
         return budgetItemRepository.save(entity);
     }
 
@@ -47,6 +41,9 @@ public class BudgetItemService {
         if (request.getPlannedAmount() != null) {
             entity.setPlannedAmount(request.getPlannedAmount());
         }
+        if (request.getDate() != null) {
+            entity.setDate(request.getDate());
+        }
         if (request.getCategoryId() != null) {
             var category = categoryRepository.findById(request.getCategoryId()).orElseThrow();
             entity.setCategory(category);
@@ -54,11 +51,29 @@ public class BudgetItemService {
         return budgetItemRepository.save(entity);
     }
 
-    public BudgetItemEntity getBudgetItem(Long id) {
-        return budgetItemRepository.findById(id).get();
+    public Optional<BudgetItemEntity> getBudgetItem(Long id, Long userId) {
+        try {
+            var entity = budgetItemRepository.findById(id);
+            if (isAuthenticated(id, userId)) {
+                return entity;
+            }
+        } catch (NoSuchElementException e) {
+            return Optional.empty();
+        }
+        return Optional.empty();
     }
 
-    public void deleteBudgetItem(Long id) {
+    public void deleteBudgetItem(Long id, Long userId) {
+        if (isAuthenticated(id, userId))
         budgetItemRepository.deleteById(id);
     }
+
+    private boolean isAuthenticated(Long entityId, Long userId) {
+        var entity = budgetItemRepository.findById(entityId).orElseThrow();
+        if (entity.getUserId() == userId) {
+            return true;
+        }
+        return false;
+    }
 }
+

@@ -1,4 +1,4 @@
-package com.example.AudriusSadaunykas.DontBeInDebtly.auth;
+package com.example.AudriusSadaunykas.DontBeInDebtly.security.login;
 
 import lombok.Builder;
 import lombok.Getter;

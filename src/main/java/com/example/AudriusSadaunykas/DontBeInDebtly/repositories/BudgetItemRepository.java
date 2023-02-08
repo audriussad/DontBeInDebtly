@@ -15,6 +15,8 @@ public interface BudgetItemRepository extends JpaRepository<BudgetItemEntity, Lo
 
     Optional<BudgetItemEntity> findById(Long id);
 
+    List<BudgetItemEntity> findByUserId(Long userId);
+
     @Query("SELECT t FROM BudgetItemEntity t WHERE YEAR(t.date) = ?1 AND MONTH(t.date) = ?2 AND t.userId = ?3")
     List<BudgetItemEntity> findByYearAndMonthAndUserId(int year, int month, Long userId);
 }

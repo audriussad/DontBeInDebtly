@@ -9,12 +9,13 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TransactionItemRepository extends JpaRepository<TransactionItemEntity, Long> {
     List<TransactionItemEntity> findByUserId(Long id);
-    //List<TransactionItemEntity> findByYearAndMonthAndCategoryAndUserId(Integer year, Integer month, Category category, Long userIs);
 
+    Optional<TransactionItemEntity> findById(Long id);
     @Query("SELECT t FROM TransactionItemEntity t WHERE YEAR(t.date) = ?1 AND MONTH(t.date) = ?2 AND t.category = ?3 AND t.userId = ?4")
     List<TransactionItemEntity> findByYearAndMonthAndCategoryAndUserId(int year, int month, Category category, Long userIs);
 

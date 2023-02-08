@@ -7,10 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -30,7 +27,7 @@ public class CategoryMerger {
                 portfolioItemList.add(portfolioItem);
 
             }
-            return portfolioItemList;
+            return sortPortfolioByCategoryId(portfolioItemList);
     }
 
     static BigDecimal calculateCategoryExpense(@NotNull List<TransactionItemEntity> userTransactions) {
@@ -88,6 +85,13 @@ public class CategoryMerger {
             }
         }
         return actualAmount;
+    }
+
+    private List<PortfolioItem> sortPortfolioByCategoryId(List<PortfolioItem> portfolioItemList) {
+        List<PortfolioItem> sortedPortfolioItemList = portfolioItemList.stream()
+                .sorted(Comparator.comparing(PortfolioItem::getCategoryId))
+                .collect(Collectors.toList());
+        return sortedPortfolioItemList;
     }
 
 
