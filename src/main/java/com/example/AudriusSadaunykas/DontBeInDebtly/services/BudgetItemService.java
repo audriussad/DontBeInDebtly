@@ -48,6 +48,7 @@ public class BudgetItemService {
             var category = categoryRepository.findById(request.getCategoryId()).orElseThrow();
             entity.setCategory(category);
         }
+        deleteBudgetItem(entity.getId(), entity.getUserId());
         return budgetItemRepository.save(entity);
     }
 
