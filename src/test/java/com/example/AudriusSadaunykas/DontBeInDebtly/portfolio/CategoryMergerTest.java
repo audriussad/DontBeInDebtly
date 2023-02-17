@@ -4,6 +4,7 @@ import com.example.AudriusSadaunykas.DontBeInDebtly.entities.BudgetItemEntity;
 import com.example.AudriusSadaunykas.DontBeInDebtly.entities.Category;
 import com.example.AudriusSadaunykas.DontBeInDebtly.entities.TransactionItemEntity;
 import org.junit.jupiter.api.*;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
